@@ -18,13 +18,17 @@ function partOne(input) {
 
 function partTwo(input) {
   return input.map(row => {
-    const removeDigitsFrom = function(originalDigit, digit) {
+    const removeSegmentsFromDigit = function(originalDigit, digit) {
       map[digit].split('').map(digit => originalDigit = originalDigit.replace(digit, ''));
       return originalDigit;
     };
 
     const removeFromArray = function(array, number) {
       return array.filter(v => v !== map[number])
+    }
+
+    const getDigitWithRemainingSegmentCount = function(digits, extract, remainingSegmentCount) {
+      return digits.find(currentDigit => removeSegmentsFromDigit(currentDigit, extract).length === remainingSegmentCount);
     }
 
     const map = new Array(10).fill('');
@@ -36,14 +40,15 @@ function partTwo(input) {
 
     let fiveDigits = digits.slice(3, 6);
     let sixDigits = digits.slice(6, 9);
-    map[6] = sixDigits.find(digit => removeDigitsFrom(digit, 1).length === 5);
+
+    map[6] = getDigitWithRemainingSegmentCount(sixDigits, 1, 5);
     sixDigits = removeFromArray(sixDigits, 6);
-    map[9] = sixDigits.find(digit => removeDigitsFrom(digit, 4).length === 2);
+    map[9] = getDigitWithRemainingSegmentCount(sixDigits, 4, 2);
     sixDigits = removeFromArray(sixDigits, 9);
     map[0] = sixDigits[0];
-    map[3] = fiveDigits.find(digit => removeDigitsFrom(digit, 7).length === 2);
+    map[3] = getDigitWithRemainingSegmentCount(fiveDigits, 7, 2);
     fiveDigits = removeFromArray(fiveDigits, 3);
-    map[5] = fiveDigits.find(digit => removeDigitsFrom(digit, 6).length === 0);
+    map[5] = getDigitWithRemainingSegmentCount(fiveDigits, 6, 0);
     fiveDigits = removeFromArray(fiveDigits, 5);
     map[2] = fiveDigits[0];
 
