@@ -22,13 +22,7 @@ const autoCompleteScore = {
   '>': 4
 };
 
-class InvalidClosing extends Error {
-  constructor(char, expectedChar) {
-    super();
-    this.char = char;
-    this.expectedChar = expectedChar;
-  }
-}
+class InvalidClosing extends Error { constructor(char) { super(); this.char = char; } }
 
 const example = getInputFromFilePath('./example.txt');
 const input = getInputFromFilePath('./input.txt');
@@ -44,10 +38,8 @@ function parsePairs(chars, opens) {
   if (Object.keys(legalPairs).indexOf(char) !== -1) {
     opens.push(char);
   } else {
-    const lastOpenChar = opens.pop();
-    const expectedClosingChar = legalPairs[lastOpenChar];
-    if (expectedClosingChar !== char) {
-      throw new InvalidClosing(char, expectedClosingChar);
+    if (legalPairs[opens.pop()] !== char) {
+      throw new InvalidClosing(char);
     }
   }
   if (chars.length > 0) {
@@ -61,11 +53,11 @@ function partOne(input) {
     try {
       parsePairs(line.split(''), []);
     } catch (e) {
-      return [e.char, e.expectedChar];
+      return e.char;
     }
   }).filter(v => v);
 
-  return errs.reduce((c, v) => c + syntaxErrorScore[v[0]], 0);
+  return errs.reduce((c, v) => c + syntaxErrorScore[v], 0);
 }
 
 function partTwo(input) {
