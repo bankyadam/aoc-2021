@@ -49,27 +49,26 @@ function parsePairs(chars, opens) {
 }
 
 function partOne(input) {
-  const errs = input.map(line => {
+  return input.map(line => {
     try {
       parsePairs(line.split(''), []);
     } catch (e) {
       return e.char;
     }
-  }).filter(v => v);
-
-  return errs.reduce((c, v) => c + syntaxErrorScore[v], 0);
+  })
+    .filter(v => v)
+    .reduce((c, v) => c + syntaxErrorScore[v], 0);
 }
 
 function partTwo(input) {
-  const autocompletes = input.map(line => {
+  const scores = input.map(line => {
     try {
       return parsePairs(line.split(''), [])
         .reduceRight((c, v) => c + legalPairs[v], '');
     } catch (e) {
     }
-  }).filter(v => v);
-
-  const scores = autocompletes
+  })
+    .filter(v => v)
     .map(line => line.split('')
       .reduce((c, v) => (c * 5) + autoCompleteScore[v], 0))
     .sort((a, b) => a - b);
