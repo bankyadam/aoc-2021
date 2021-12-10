@@ -63,13 +63,8 @@ function partOne(input) {
 function partTwo(input) {
   const autocompletes = input.map(line => {
     try {
-      const leftOpens = parsePairs(line.split(''), []);
-      let openChar;
-      let ret = '';
-      while (openChar = leftOpens.pop()) {
-        ret += legalPairs[openChar];
-      }
-      return ret;
+      return parsePairs(line.split(''), [])
+        .reduceRight((c, v) => c + legalPairs[v], '');
     } catch (e) {
     }
   }).filter(v => v);
